@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171c22" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="محرر الصور" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="icon" type="image/png" href="icon-192.png" />
+    <title>محرر الصور</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon">▧</span>
+        <h1>محرر الصور</h1>
+      </div>
+      <div class="top-actions">
+        <button id="resetBtn" class="btn secondary" type="button">
+          ↺ إعادة ضبط
+        </button>
+        <button id="downloadBtn" class="btn primary" type="button">
+          ⬇ تحميل الصورة
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel left-panel">
+        <div class="section-heading">الفلاتر</div>
+        <div class="filter-grid">
+          <button class="filter-card active" data-filter="normal" type="button">
+            <span class="filter-swatch normal"></span><span>طبيعي</span>
+          </button>
+          <button class="filter-card" data-filter="grayscale" type="button">
+            <span class="filter-swatch grayscale"></span><span>أبيض وأسود</span>
+          </button>
+          <button class="filter-card" data-filter="sepia" type="button">
+            <span class="filter-swatch sepia"></span><span>سيبيا</span>
+          </button>
+          <button class="filter-card" data-filter="vintage" type="button">
+            <span class="filter-swatch vintage"></span><span>قديم</span>
+          </button>
+          <button class="filter-card" data-filter="warm" type="button">
+            <span class="filter-swatch warm"></span><span>دافئ</span>
+          </button>
+          <button class="filter-card" data-filter="cool" type="button">
+            <span class="filter-swatch cool"></span><span>بارد</span>
+          </button>
+          <button class="filter-card" data-filter="dramatic" type="button">
+            <span class="filter-swatch dramatic"></span><span>درامي</span>
+          </button>
+          <button class="filter-card" data-filter="fade" type="button">
+            <span class="filter-swatch fade"></span><span>باهت</span>
+          </button>
+        </div>
+        <div class="divider"></div>
+        <label class="upload-btn" for="fileInput">＋ اختر صورة من جهازك</label>
+        <input id="fileInput" type="file" accept="image/*" />
+        <p class="hint">الصورة تبقى على جهازك ولا تُرفع إلى أي موقع.</p>
+      </aside>
+
+      <section class="canvas-panel">
+        <div class="canvas-toolbar">
+          <span id="imageStatus">ارفع صورة للبدء</span>
+          <button
+            id="fitBtn"
+            class="icon-btn"
+            type="button"
+            title="ملاءمة المعاينة"
+          >
+            ⛶
+          </button>
+        </div>
+        <div id="canvasStage" class="canvas-stage">
+          <div id="emptyState" class="empty-state">
+            <div class="empty-icon">▧</div>
+            <h2>ابدأ بتحرير صورتك</h2>
+            <p>اختر صورة من جهازك لعرضها وتعديلها</p>
+            <label for="fileInput" class="btn primary">اختيار صورة</label>
+          </div>
+          <canvas id="editorCanvas" hidden></canvas>
+        </div>
+        <div class="zoom-bar">
+          <button
+            id="zoomOut"
+            class="icon-btn"
+            type="button"
+            aria-label="تصغير"
+          >
+            −
+          </button>
+          <span id="zoomValue">100%</span>
+          <button id="zoomIn" class="icon-btn" type="button" aria-label="تكبير">
+            ＋
+          </button>
+          <button
+            id="fitBtnBottom"
+            class="icon-btn"
+            type="button"
+            title="ملاءمة المعاينة"
+          >
+            ⛶
+          </button>
+        </div>
+      </section>
+
+      <aside class="panel right-panel">
+        <section class="tool-section">
+          <h2>☼ التعديلات</h2>
+          <div class="range-row">
+            <div class="range-label">
+              <label for="brightness">السطوع</label
+              ><output id="brightnessOut">0</output>
+            </div>
+            <input
+              id="brightness"
+              data-adjust="brightness"
+              type="range"
+              min="-100"
+              max="100"
+              value="0"
+            />
+          </div>
+          <div class="range-row">
+            <div class="range-label">
+              <label for="contrast">التباين</label
+              ><output id="contrastOut">0</output>
+            </div>
+            <input
+              id="contrast"
+              data-adjust="contrast"
+              type="range"
+              min="-100"
+              max="100"
+              value="0"
+            />
+          </div>
+          <div class="range-row">
+            <div class="range-label">
+              <label for="saturation">التشبع</label
+              ><output id="saturationOut">0</output>
+            </div>
+            <input
+              id="saturation"
+              data-adjust="saturation"
+              type="range"
+              min="-100"
+              max="100"
+              value="0"
+            />
+          </div>
+          <div class="range-row">
+            <div class="range-label">
+              <label for="hue">تغيير الألوان</label
+              ><output id="hueOut">0°</output>
+            </div>
+            <input
+              id="hue"
+              data-adjust="hue"
+              type="range"
+              min="-180"
+              max="180"
+              value="0"
+            />
+          </div>
+          <div class="range-row">
+            <div class="range-label">
+              <label for="blur">الضبابية</label><output id="blurOut">0</output>
+            </div>
+            <input
+              id="blur"
+              data-adjust="blur"
+              type="range"
+              min="0"
+              max="10"
+              value="0"
+              step="0.5"
+            />
+          </div>
+        </section>
+
+        <section class="tool-section">
+          <h2>↻ التدوير والقلب</h2>
+          <div class="button-grid">
+            <button class="tool-btn" id="rotateLeft" type="button">
+              ↶<span>يسار</span>
+            </button>
+            <button class="tool-btn" id="rotateRight" type="button">
+              ↷<span>يمين</span>
+            </button>
+            <button class="tool-btn" id="flipH" type="button">
+              ⇋<span>أفقي</span>
+            </button>
+            <button class="tool-btn" id="flipV" type="button">
+              ⇅<span>رأسي</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="tool-section">
+          <h2>✂ القص</h2>
+          <label class="field-label" for="cropRatio">نسبة الأبعاد</label>
+          <select id="cropRatio">
+            <option value="free">الأبعاد الأصلية</option>
+            <option value="1:1">مربع 1:1</option>
+            <option value="4:3">أفقي 4:3</option>
+            <option value="3:4">رأسي 3:4</option>
+            <option value="16:9">عريض 16:9</option>
+            <option value="9:16">طولي 9:16</option>
+          </select>
+          <button id="cropBtn" class="btn primary full" type="button">
+            تطبيق القص من المنتصف
+          </button>
+          <p class="hint">
+            القص يزيل الأطراف الزائدة حول منتصف الصورة حسب النسبة المختارة.
+          </p>
+        </section>
+
+        <section class="tool-section">
+          <h2>Ｔ إضافة نص</h2>
+          <input id="textInput" type="text" placeholder="اكتب النص هنا" />
+          <div class="text-options">
+            <select id="fontFamily" aria-label="نوع الخط">
+              <option value="Arial">Arial</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="sans-serif">Sans-serif</option>
+              <option value="serif">Serif</option>
+            </select>
+            <input
+              id="fontSize"
+              type="number"
+              min="10"
+              max="160"
+              value="32"
+              aria-label="حجم الخط"
+            />
+            <input
+              id="textColor"
+              type="color"
+              value="#ffffff"
+              aria-label="لون النص"
+            />
+          </div>
+          <button id="addTextBtn" class="btn primary full" type="button">
+            ＋ إضافة النص
+          </button>
+          <p class="hint">
+            يُضاف النص في منتصف الصورة. يمكنك إضافته أكثر من مرة.
+          </p>
+        </section>
+      </aside>
+    </main>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
